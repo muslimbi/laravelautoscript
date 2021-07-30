@@ -20,7 +20,7 @@ cd %projectname%
 
 echo %PROJECTDIR%
 echo %CURRENTDIR%
-
+echo %projectname%
 
 
 @echo off &setlocal
