@@ -20,7 +20,8 @@ cd %projectname%
 
 echo %PROJECTDIR%
 echo %CURRENTDIR%
-
+echo %projectname%
+echo Now in project dirctory
 
 
 @echo off &setlocal
