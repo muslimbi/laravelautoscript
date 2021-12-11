@@ -1,4 +1,5 @@
 @echo off
+rem Laravel Auto Script
 set projectname=hasan6
 
 cd /D %~dp0
