@@ -1,5 +1,4 @@
 @echo off
-rem Laravel Auto Script
 set projectname=hasan6
 
 cd /D %~dp0
@@ -9,7 +8,7 @@ SET PROJECTDIR=%CURRENTDIR%%projectname%\
 
 call composer create-project --prefer-dist laravel/laravel %projectname%
 
-echo Laravel Install Successfully
+echo Laravel Install Sucessfully
 copy database.sqlite %projectname%\database\database.sqlite
 mkdir %projectname%\resources\views\layouts
 rem copy app.blade.php %projectname%\resources\views\layouts\app.blade.php
@@ -18,7 +17,7 @@ rem copy layouts %projectname%\resources\views\layouts
 
 copy layouts\* %projectname%\resources\views\layouts
 
-echo Database Copy Successfully
+echo Database Copy Sucessfully
 
 
 cd %projectname%
@@ -48,20 +47,20 @@ rem echo.APP_URL=http://localhost:8000>>"%PROJECTDIR%.env"
 echo.DB_CONNECTION=sqlite>>"%PROJECTDIR%.env"
 echo.DB_DATABASE=D:\laravel\%projectname%\database\database.sqlite>>"%PROJECTDIR%.env"
 
-echo ENV file modify successfully
+echo ENV file modify sucessfully
 
 call composer require laravel/ui
 call php artisan ui bootstrap --auth
-echo Laravel UI Install Successfully
+echo Laravel UI Install Sucessfully
 
 call composer require laravel/telescope
 call php artisan telescope:install
-echo Laravel Telescope Install Successfully
+echo Laravel Telescope Install Sucessfully
 
 
 call composer require crestapps/laravel-code-generator --dev
 
-echo Code Generator Install Successfully
+echo Code Generator Install Sucessfully
 
 
 php artisan resource-file:create Biography --fields="id,name,name:gender;options:male|female;html-type:select;data-type:enum,name:music_type;html-type:checkbox;options:country|pop|rock|jazz|rap,is_retired"
