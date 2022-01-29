@@ -14,16 +14,16 @@ Updated 27th Sept 2021
 .. image:: https://img.shields.io/pypi/l/laravelautoscript.svg
     :target: https://pypi.python.org/pypi/laravelautoscript
 
-.. image:: https://img.shields.io/travis/sammchardy/laravelautoscript.svg
+.. image:: https://img.shields.io/github/muslimbi/laravelautoscript.svg
     :target: https://travis-ci.org/sammchardy/laravelautoscript
 
 .. image:: https://img.shields.io/coveralls/sammchardy/laravelautoscript.svg
     :target: https://coveralls.io/github/sammchardy/laravelautoscript
 
-.. image:: https://img.shields.io/pypi/wheel/laravelautoscript.svg
+.. image:: https://img.shields.io/github/muslimbi/laravelautoscript.svg
     :target: https://pypi.python.org/pypi/laravelautoscript
 
-.. image:: https://img.shields.io/pypi/pyversions/laravelautoscript.svg
+.. image:: https://img.shields.io/github/muslimbi/laravelautoscript.svg
     :target: https://pypi.python.org/pypi/laravelautoscript
 
 This is an unofficial Python wrapper for the `Binance exchange REST API v3 <https://binance-docs.github.io/apidocs/spot/en>`_. I am in no way affiliated with Binance, use at your own risk.
@@ -34,7 +34,7 @@ If you want to automate interactions with Binance stick around.
 If you're interested in Binance's new DEX Binance Chain see my `python-binance-chain library <https://github.com/sammchardy/python-binance-chain>`_
 
 Source code
-  https://github.com/sammchardy/python-binance
+  https://github.com/muslimbi/laravelautoscript
 
 Documentation
   https://python-binance.readthedocs.io/en/latest/
