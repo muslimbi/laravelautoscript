@@ -1,6 +1,6 @@
 @echo off
 rem Laravel Auto Script
-set projectname=hasan6
+set projectname=demoproject
 
 cd /D %~dp0
 SET CURRENTDIR=%~dp0
