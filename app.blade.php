@@ -1,3 +1,4 @@
+<?php $adminmenus = DB::table('backurls')->get(); ?>
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -41,7 +42,11 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                            <li><a href="home">Home</a></li> 
+                           <a href="home">Home | </a>
+                           <a href="backurls">backurls |</a>
+                        @foreach ($adminmenus as $adminmenu)
+							<a href={{$adminmenu->name}}>{{$adminmenu->name}} |</a>
+						@endforeach
                     </ul>
 
                     <!-- Right Side Of Navbar -->

@@ -11,19 +11,14 @@ call composer create-project --prefer-dist laravel/laravel %projectname%
 echo Laravel Install Successfully
 
 copy database.sqlite %projectname%\database\database.sqlite
-echo Database Copy Successfully
-
 mkdir %projectname%\resources\views\layouts
-copy app.blade.php %projectname%\resources\views\layouts\app.blade.php
-echo Copy app file
+rem copy app.blade.php %projectname%\resources\views\layouts\app.blade.php
 
 rem copy layouts %projectname%\resources\views\layouts
-rem copy layouts\* %projectname%\resources\views\layouts
-mkdir %projectname%\public\css
-mkdir %projectname%\public\js
-copy app.css %projectname%\public\css\app.css
-copy app.js %projectname%\public\js\app.js
 
+copy layouts\* %projectname%\resources\views\layouts
+
+echo Database Copy Successfully
 
 
 cd %projectname%
@@ -54,7 +49,7 @@ echo.DB_CONNECTION=sqlite>>"%PROJECTDIR%.env"
 rem DB_DATABASE=D:\laravel\%projectname%\database\database.sqlite>>"%PROJECTDIR%.env"
 echo.DB_DATABASE=database\database.sqlite>>"%PROJECTDIR%.env"
 
-echo ENV file modify Successfully
+echo ENV file modify successfully
 
 call composer require laravel/ui
 call php artisan ui bootstrap --auth
@@ -63,7 +58,7 @@ echo Laravel UI Install Successfully
 call composer require laravel/telescope
 call php artisan telescope:install
 echo Laravel Telescope Install Successfully
-php artisan migrate
+
 
 call composer require crestapps/laravel-code-generator --dev
 
@@ -80,15 +75,7 @@ php artisan resource-file:create AssetCategory --fields=id,name,description,is_a
 php artisan create:resources AssetCategory --with-migration
 
 php artisan migrate
-
-php artisan tinker 
-DB::table("backurls")->insert(["id"=>"1", "name"=>"biographies", "description"=>"Biography Menu"]);
-DB::table("backurls")->insert(["id"=>"2", "name"=>"animals", "description"=>"animals Menu"]);
-DB::table("backurls")->insert(["id"=>"3", "name"=>"asset_categories", "description"=>"asset_categories Menu"]);
-
-
 php artisan serve
 
-rem add namespace at router 'namespace'=>'App\Http\Controllers',
 
 pause
