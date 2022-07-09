@@ -11,15 +11,14 @@ call composer create-project --prefer-dist laravel/laravel %projectname%
 echo Laravel Install Successfully
 
 copy database.sqlite %projectname%\database\database.sqlite
-mkdir %projectname%\resources\views\layouts
-rem copy app.blade.php %projectname%\resources\views\layouts\app.blade.php
-
-rem copy layouts %projectname%\resources\views\layouts
-
-copy layouts\* %projectname%\resources\views\layouts
-
 echo Database Copy Successfully
 
+mkdir %projectname%\resources\views\layouts
+rem copy layouts\* %projectname%\resources\views\layouts
+rem copy layouts %projectname%\resources\views\layouts
+copy app.blade.php %projectname%\resources\views\layouts\app.blade.php
+copy home.blade.php %projectname%\resources\views\home.blade.php
+copy welcome.blade.php %projectname%\resources\views\welcome.blade.php
 
 cd %projectname%
 
