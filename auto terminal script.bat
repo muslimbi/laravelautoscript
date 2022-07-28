@@ -134,8 +134,6 @@ php artisan create:resources bids --with-soft-delete --models-per-page=15 --with
 php artisan resource-file:create quotes --fields="id,department_id,desc,status,approved_on,approved_by,assigned,is_active"
 php artisan create:resources quotes --with-soft-delete --models-per-page=15 --with-migration
 
-php artisan resource-file:create failed_jobs --fields="id,connection,queue,payload,exception,failed_at,is_active"
-php artisan create:resources failed_jobs --with-soft-delete --models-per-page=15 --with-migration
 
 
 php artisan migrate
