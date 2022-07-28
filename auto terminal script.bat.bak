@@ -122,6 +122,22 @@ php artisan create:resources Animal --with-soft-delete --models-per-page=15 --wi
 php artisan resource-file:create AssetCategory --fields=id,name,description,is_active
 php artisan create:resources AssetCategory --with-migration
 
+php artisan resource-file:create Department --fields="id,name,image,is_active"
+php artisan create:resources Department --with-soft-delete --models-per-page=15 --with-migration
+
+php artisan resource-file:create quote_items --fields="id,quote_id,qty,unit,desc,price,is_active"
+php artisan create:resources quote_items --with-soft-delete --models-per-page=15 --with-migration
+
+php artisan resource-file:create bids --fields="id,quote_id,supplier_id,amount,message,status,is_active"
+php artisan create:resources bids --with-soft-delete --models-per-page=15 --with-migration
+
+php artisan resource-file:create quotes --fields="id,department_id,desc,status,approved_on,approved_by,assigned,is_active"
+php artisan create:resources quotes --with-soft-delete --models-per-page=15 --with-migration
+
+php artisan resource-file:create failed_jobs --fields="id,connection,queue,payload,exception,failed_at,is_active"
+php artisan create:resources failed_jobs --with-soft-delete --models-per-page=15 --with-migration
+
+
 php artisan migrate
 
 php artisan tinker
