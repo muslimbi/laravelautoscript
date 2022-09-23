@@ -78,6 +78,11 @@ call composer require laravel/telescope --dev
 echo Laravel Telescope Install Successfully
 php artisan migrate
 
+
+call composer require laravel/breeze --dev
+php artisan breeze:install vue --ssr
+
+
 call composer require barryvdh/laravel-ide-helper --dev 
 php artisan clear-compiled
 php artisan ide-helper:meta
@@ -133,7 +138,6 @@ php artisan create:resources bids --with-soft-delete --models-per-page=15 --with
 
 php artisan resource-file:create quotes --fields="id,department_id,desc,status,approved_on,approved_by,assigned,is_active"
 php artisan create:resources quotes --with-soft-delete --models-per-page=15 --with-migration
-
 
 
 php artisan migrate
