@@ -78,6 +78,11 @@ call composer require laravel/telescope --dev
 echo Laravel Telescope Install Successfully
 php artisan migrate
 
+
+call composer require laravel/breeze --dev
+php artisan breeze:install vue --ssr
+
+
 call composer require barryvdh/laravel-ide-helper --dev 
 php artisan clear-compiled
 php artisan ide-helper:meta
@@ -134,9 +139,6 @@ php artisan create:resources bids --with-soft-delete --models-per-page=15 --with
 php artisan resource-file:create quotes --fields="id,department_id,desc,status,approved_on,approved_by,assigned,is_active"
 php artisan create:resources quotes --with-soft-delete --models-per-page=15 --with-migration
 
-php artisan resource-file:create failed_jobs --fields="id,connection,queue,payload,exception,failed_at,is_active"
-php artisan create:resources failed_jobs --with-soft-delete --models-per-page=15 --with-migration
-
 
 php artisan migrate
 
@@ -144,7 +146,7 @@ php artisan tinker
 
 rem DB::table("backurls")->insert(["id"=>"1", "name"=>"biographies", "description"=>"Biography Menu"]);
 rem DB::table("backurls")->insert(["id"=>"2", "name"=>"animals", "description"=>"animals Menu"]);
-rem DB::table("backurls")->insert(["id"=>"3", "name"=>"asset_categories", "description"=>"asset_categories Menu"]);
+rem DB::table("backurls")->insert(["id"=>"3", "name"=>"asset_categories", "description"=>"asset ctg Menu"]);
 rem exit
 
 php artisan serve

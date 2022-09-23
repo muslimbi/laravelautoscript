@@ -147,7 +147,7 @@ php artisan tinker
 rem DB::table("backurls")->insert(["id"=>"1", "name"=>"biographies", "description"=>"Biography Menu"]);
 rem DB::table("backurls")->insert(["id"=>"2", "name"=>"animals", "description"=>"animals Menu"]);
 rem DB::table("backurls")->insert(["id"=>"3", "name"=>"asset_categories", "description"=>"asset ctg Menu"]);
-rem exit
+call exit
 
 php artisan serve
 
