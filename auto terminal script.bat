@@ -78,10 +78,8 @@ call composer require laravel/telescope --dev
 echo Laravel Telescope Install Successfully
 php artisan migrate
 
-
 call composer require laravel/breeze --dev
 php artisan breeze:install vue --ssr
-
 
 call composer require barryvdh/laravel-ide-helper --dev 
 php artisan clear-compiled
