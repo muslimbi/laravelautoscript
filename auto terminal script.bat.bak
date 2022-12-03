@@ -22,23 +22,6 @@ rem copy database.sqlite %projectname%\database\database.sqlite
 copy NUL %projectname%\database\database.sqlite
 echo Database Copy Successfully
 
-mkdir %projectname%\resources\views\layouts
-rem copy layouts\* %projectname%\resources\views\layouts
-rem copy layouts %projectname%\resources\views\layouts
-copy app.blade.php %projectname%\resources\views\layouts\app.blade.php /Y
-copy home.blade.php %projectname%\resources\views\home.blade.php /Y
-copy welcome.blade.php %projectname%\resources\views\welcome.blade.php /Y
-echo Copy app file
-
-rem copy layouts %projectname%\resources\views\layouts
-rem copy layouts\* %projectname%\resources\views\layouts
-mkdir %projectname%\public\css
-mkdir %projectname%\public\js
-copy app.css %projectname%\public\css\app.css
-copy app.js %projectname%\public\js\app.js
-
-
-
 cd %projectname%
 
 echo %PROJECTDIR%
@@ -68,6 +51,25 @@ echo.DB_DATABASE=%PROJECTDIR%\database\database.sqlite>>"%PROJECTDIR%.env"
 echo.FOREIGN_KEYS=ON>>"%PROJECTDIR%.env"
 echo ENV file modify Successfully
 
+
+
+mkdir %projectname%\resources\views\layouts
+rem copy layouts\* %projectname%\resources\views\layouts
+rem copy layouts %projectname%\resources\views\layouts
+copy ..\app.blade.php %projectname%\resources\views\layouts\app.blade.php /Y
+copy ..\home.blade.php %projectname%\resources\views\home.blade.php /Y
+copy ..\welcome.blade.php %projectname%\resources\views\welcome.blade.php /Y
+echo Copy app file
+
+rem copy layouts %projectname%\resources\views\layouts
+rem copy layouts\* %projectname%\resources\views\layouts
+mkdir %projectname%\public\css
+mkdir %projectname%\public\js
+copy ..\app.css %projectname%\public\css\app.css
+copy ..\app.js %projectname%\public\js\app.js
+
+
+
 call composer require laravel/ui
 call php artisan ui bootstrap --auth
 echo Laravel UI Install Successfully
@@ -78,10 +80,8 @@ call composer require laravel/telescope --dev
 echo Laravel Telescope Install Successfully
 php artisan migrate
 
-
 call composer require laravel/breeze --dev
 php artisan breeze:install vue --ssr
-
 
 call composer require barryvdh/laravel-ide-helper --dev 
 php artisan clear-compiled
@@ -147,7 +147,7 @@ php artisan tinker
 rem DB::table("backurls")->insert(["id"=>"1", "name"=>"biographies", "description"=>"Biography Menu"]);
 rem DB::table("backurls")->insert(["id"=>"2", "name"=>"animals", "description"=>"animals Menu"]);
 rem DB::table("backurls")->insert(["id"=>"3", "name"=>"asset_categories", "description"=>"asset ctg Menu"]);
-rem exit
+call exit
 
 php artisan serve
 

@@ -22,20 +22,20 @@ rem copy database.sqlite %projectname%\database\database.sqlite
 copy NUL %projectname%\database\database.sqlite
 echo Database Copy Successfully
 
-mkdir %projectname%\resources\views\layouts
-rem copy layouts\* %projectname%\resources\views\layouts
-rem copy layouts %projectname%\resources\views\layouts
-copy app.blade.php %projectname%\resources\views\layouts\app.blade.php /Y
-copy home.blade.php %projectname%\resources\views\home.blade.php /Y
-copy welcome.blade.php %projectname%\resources\views\welcome.blade.php /Y
-echo Copy app file
-
-rem copy layouts %projectname%\resources\views\layouts
-rem copy layouts\* %projectname%\resources\views\layouts
-mkdir %projectname%\public\css
-mkdir %projectname%\public\js
-copy app.css %projectname%\public\css\app.css
-copy app.js %projectname%\public\js\app.js
+rem mkdir %projectname%\resources\views\layouts
+rem rem copy layouts\* %projectname%\resources\views\layouts
+rem rem copy layouts %projectname%\resources\views\layouts
+rem copy app.blade.php %projectname%\resources\views\layouts\app.blade.php /Y
+rem copy home.blade.php %projectname%\resources\views\home.blade.php /Y
+rem copy welcome.blade.php %projectname%\resources\views\welcome.blade.php /Y
+rem echo Copy app file
+rem 
+rem rem copy layouts %projectname%\resources\views\layouts
+rem rem copy layouts\* %projectname%\resources\views\layouts
+rem mkdir %projectname%\public\css
+rem mkdir %projectname%\public\js
+rem copy app.css %projectname%\public\css\app.css
+rem copy app.js %projectname%\public\js\app.js
 
 
 
@@ -72,11 +72,25 @@ call composer require laravel/ui
 call php artisan ui bootstrap --auth
 echo Laravel UI Install Successfully
 
-call composer require barryvdh/laravel-debugbar --dev
-
 call composer require laravel/telescope --dev
 echo Laravel Telescope Install Successfully
 php artisan migrate
+
+
+mkdir resources\views\layouts
+copy ..\app.blade.php resources\views\layouts\app.blade.php /Y
+copy ..\home.blade.php resources\views\home.blade.php /Y
+copy ..\welcome.blade.php resources\views\welcome.blade.php /Y
+echo Copy app file
+
+mkdir public\css
+mkdir public\js
+copy ..\app.css public\css\app.css
+copy ..\app.js public\js\app.js
+
+
+
+call composer require barryvdh/laravel-debugbar --dev
 
 call composer require laravel/breeze --dev
 php artisan breeze:install vue --ssr
