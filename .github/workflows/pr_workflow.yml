@@ -1,0 +1,7 @@
+name: Pull Request WorkFlow
+
+on:
+  pull_request:
+    branches:
+      - master
+      - staging
