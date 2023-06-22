@@ -29,8 +29,6 @@ jobs:
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
     - name: Install Dependencies
       run: composer create-project --prefer-dist laravel/laravel laravel
-    - name: Install NPM Dependencies
-      run: npm install
     - name: Generate key
       run: php artisan key:generate
     - name: Directory Permissions
