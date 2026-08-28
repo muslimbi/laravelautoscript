@@ -1,168 +1,249 @@
-:: Name:     laravel-auto-setup-script
-:: Purpose:  Set up a new laravel project and install useful default packages
-:: Requires: PHP available from cli on current system
-::           composer available from cli on current system
-:: Author:   muslimbi@gmail.com
-:: Revision: July 2022 - inital script
-
-
 @echo off
-rem Laravel Auto Script
-set projectname=demoproject
+setlocal enabledelayedexpansion
 
-cd /D %~dp0
-SET CURRENTDIR=%~dp0
-SET PROJECTDIR=%CURRENTDIR%%projectname%\
+:: =========================================================================
+:: Name:     Laravel Ultimate Setup Script
+:: Purpose:  Interactive, Robust, and Feature-Rich Laravel Installer
+:: Author:   Assistant
+:: =========================================================================
 
+:: --- COLORS ---
+:: Removed ANSI color codes for Windows compatibility
+set "RESET="
+set "BOLD="
+set "RED="
+set "GREEN="
+set "YELLOW="
+set "BLUE="
+set "CYAN="
 
+cls
+echo.
+echo %BOLD%%CYAN%=====================================================%RESET%
+echo %BOLD%%CYAN%   LARAVEL ULTIMATE SETUP SCRIPT                     %RESET%
+echo %BOLD%%CYAN%   Interactive Installer with Best Practices         %RESET%
+echo %BOLD%%CYAN%=====================================================%RESET%
+echo.
+
+:: --- 1. PREREQUISITE CHECK ---
+echo %YELLOW%[*] Checking System Requirements...%RESET%
+
+where php >nul 2>nul
+if %errorlevel% neq 0 (
+    echo %RED%[ERROR] PHP is not installed or not in PATH.%RESET%
+    pause
+    exit /b 1
+)
+
+where composer >nul 2>nul
+if %errorlevel% neq 0 (
+    echo %RED%[ERROR] Composer is not installed or not in PATH.%RESET%
+    pause
+    exit /b 1
+)
+
+where git >nul 2>nul
+if %errorlevel% neq 0 (
+    echo %RED%[ERROR] Git is not installed or not in PATH.%RESET%
+    pause
+    exit /b 1
+)
+
+where node >nul 2>nul
+if %errorlevel% neq 0 (
+    echo %RED%[ERROR] Node.js is not installed or not in PATH.%RESET%
+    pause
+    exit /b 1
+)
+
+where npm >nul 2>nul
+if %errorlevel% neq 0 (
+    echo %RED%[ERROR] NPM is not installed or not in PATH.%RESET%
+    pause
+    exit /b 1
+)
+
+echo %GREEN%[OK] All prerequisites found.%RESET%
+echo.
+
+:: --- 2. PROJECT SETUP ---
+:PROMPT_NAME
+set /p projectname="%BOLD%Enter project name [my-app]: %RESET%"
+if "%projectname%"=="" set projectname=my-app
+
+if exist "%projectname%" (
+    echo %RED%[ERROR] Directory '%projectname%' already exists. Please choose another name.%RESET%
+    goto PROMPT_NAME
+)
+
+echo.
+echo %BOLD%Select Stack:%RESET%
+echo   1. Standard Laravel (Blade)
+echo   2. Laravel Breeze (Blade + Alpine)
+echo   3. Laravel Breeze (Vue + SSR)
+echo   4. Laravel Breeze (React + SSR)
+echo   5. API Only
+echo.
+set /p stackchoice="%BOLD%Enter choice [1]: %RESET%"
+if "%stackchoice%"=="" set stackchoice=1
+
+echo.
+echo %BOLD%Select Database:%RESET%
+echo   1. SQLite (Zero Config)
+echo   2. MySQL
+echo.
+set /p dbchoice="%BOLD%Enter choice [1]: %RESET%"
+if "%dbchoice%"=="" set dbchoice=1
+
+:: --- 3. CREATE PROJECT ---
+echo.
+echo %CYAN%[*] Creating Laravel Project...%RESET%
 call composer create-project --prefer-dist laravel/laravel %projectname%
-echo Laravel Install Successfully
-
-rem copy database.sqlite %projectname%\database\database.sqlite
-copy NUL %projectname%\database\database.sqlite
-echo Database Copy Successfully
-
-rem mkdir %projectname%\resources\views\layouts
-rem rem copy layouts\* %projectname%\resources\views\layouts
-rem rem copy layouts %projectname%\resources\views\layouts
-rem copy app.blade.php %projectname%\resources\views\layouts\app.blade.php /Y
-rem copy home.blade.php %projectname%\resources\views\home.blade.php /Y
-rem copy welcome.blade.php %projectname%\resources\views\welcome.blade.php /Y
-rem echo Copy app file
-rem 
-rem rem copy layouts %projectname%\resources\views\layouts
-rem rem copy layouts\* %projectname%\resources\views\layouts
-rem mkdir %projectname%\public\css
-rem mkdir %projectname%\public\js
-rem copy app.css %projectname%\public\css\app.css
-rem copy app.js %projectname%\public\js\app.js
-
-
+if %errorlevel% neq 0 (
+    echo %RED%[ERROR] Failed to create project.%RESET%
+    pause
+    exit /b 1
+)
 
 cd %projectname%
 
-echo %PROJECTDIR%
-echo %CURRENTDIR%
-echo %projectname%
-echo Now in project dirctory
+:: --- 4. GIT INIT ---
+echo.
+echo %CYAN%[*] Initializing Git...%RESET%
+call git init -b main
+call git add .
+call git commit -m "chore: initial laravel install"
 
+:: --- 5. DATABASE CONFIGURATION ---
+echo.
+echo %CYAN%[*] Configuring Database...%RESET%
 
-@echo off &setlocal
-set "search=localhost"
-set "replace=localhost:8000"
-set textfile=.env
-set newfile=Output.txt
-(for /f "delims=" %%i in (%textfile%) do (
-    set "line=%%i"
-    setlocal enabledelayedexpansion
-    set "line=!line:%search%=%replace%!"
-    echo(!line!
-    endlocal
-))>"%newfile%"
-del %textfile%
-rename %newfile%  %textfile%
+if "%dbchoice%"=="1" (
+    echo %YELLOW%    - Setting up SQLite...%RESET%
+    copy /y NUL database\database.sqlite >nul
+    
+    :: Use PowerShell for reliable .env replacement
+    powershell -Command "(gc .env) -replace 'DB_CONNECTION=mysql', 'DB_CONNECTION=sqlite' | Out-File -encoding ASCII .env"
+    powershell -Command "(gc .env) -replace 'DB_DATABASE=laravel', 'DB_DATABASE=%cd%\database\database.sqlite' | Out-File -encoding ASCII .env"
+    
+    echo /database/database.sqlite >> .gitignore
+) else (
+    echo %YELLOW%    - Keeping MySQL config. Please ensure DB exists.%RESET%
+    set /p dbname="Enter Database Name [laravel]: "
+    if "!dbname!"=="" set dbname=laravel
+    set /p dbuser="Enter Database User [root]: "
+    if "!dbuser!"=="" set dbuser=root
+    set /p dbpass="Enter Database Password []: "
+    
+    powershell -Command "(gc .env) -replace 'DB_DATABASE=laravel', 'DB_DATABASE=!dbname!' | Out-File -encoding ASCII .env"
+    powershell -Command "(gc .env) -replace 'DB_USERNAME=root', 'DB_USERNAME=!dbuser!' | Out-File -encoding ASCII .env"
+    powershell -Command "(gc .env) -replace 'DB_PASSWORD=', 'DB_PASSWORD=!dbpass!' | Out-File -encoding ASCII .env"
+)
 
-rem echo.APP_URL=http://localhost:8000>>"%PROJECTDIR%.env"
-echo.DB_CONNECTION=sqlite>>"%PROJECTDIR%.env"
-echo.DB_DATABASE=%PROJECTDIR%\database\database.sqlite>>"%PROJECTDIR%.env"
-echo.FOREIGN_KEYS=ON>>"%PROJECTDIR%.env"
-echo ENV file modify Successfully
+:: Gitignore Tweaks
+echo. >> .gitignore
+echo # IDE Helpers >> .gitignore
+echo .phpstackbin >> .gitignore
+echo _ide_helper.php >> .gitignore
+echo _ide_helper_models.php >> .gitignore
+echo .phpstorm.meta.php >> .gitignore
 
-call composer require laravel/ui
-call php artisan ui bootstrap --auth
-echo Laravel UI Install Successfully
+call git add .
+call git commit -m "config: database and gitignore setup"
 
-call composer require laravel/telescope --dev
-echo Laravel Telescope Install Successfully
-php artisan migrate
+:: --- 6. STACK INSTALLATION ---
+if "%stackchoice%"=="1" (
+    echo %YELLOW%[*] Skipping specific stack installation (Standard Blade).%RESET%
+)
 
+if "%stackchoice%"=="2" (
+    echo %CYAN%[*] Installing Breeze (Blade)...%RESET%
+    call composer require laravel/breeze --dev
+    call php artisan breeze:install blade --quiet
+)
 
-mkdir resources\views\layouts
-copy ..\app.blade.php resources\views\layouts\app.blade.php /Y
-copy ..\home.blade.php resources\views\home.blade.php /Y
-copy ..\welcome.blade.php resources\views\welcome.blade.php /Y
-echo Copy app file
+if "%stackchoice%"=="3" (
+    echo %CYAN%[*] Installing Breeze (Vue + SSR)...%RESET%
+    call composer require laravel/breeze --dev
+    call php artisan breeze:install vue --ssr --quiet
+)
 
-mkdir public\css
-mkdir public\js
-copy ..\app.css public\css\app.css
-copy ..\app.js public\js\app.js
+if "%stackchoice%"=="4" (
+    echo %CYAN%[*] Installing Breeze (React + SSR)...%RESET%
+    call composer require laravel/breeze --dev
+    call php artisan breeze:install react --ssr --quiet
+)
 
+if "%stackchoice%"=="5" (
+    echo %CYAN%[*] Configuring API Only...%RESET%
+    call php artisan install:api
+)
 
+:: Commit after stack
+if not "%stackchoice%"=="1" (
+    call git add .
+    call git commit -m "feat: install chosen stack"
+)
 
-call composer require barryvdh/laravel-debugbar --dev
+:: --- 7. DEV TOOLS ---
+echo.
+echo %CYAN%[*] Installing Developer Tools...%RESET%
+call composer require laravel/telescope barryvdh/laravel-debugbar barryvdh/laravel-ide-helper beyondcode/laravel-query-detector crestapps/laravel-code-generator --dev
+call php artisan telescope:install
+call php artisan ide-helper:generate
+call php artisan ide-helper:meta
+call php artisan vendor:publish --provider=BeyondCode\QueryDetector\QueryDetectorServiceProvider
 
-call composer require laravel/breeze --dev
-php artisan breeze:install vue --ssr
+call git add .
+call git commit -m "chore: install dev tools (telescope, debugbar, ide-helper)"
 
-call composer require barryvdh/laravel-ide-helper --dev 
-php artisan clear-compiled
-php artisan ide-helper:meta
-:: php artisan ide-helper:models
-php artisan ide-helper:generate
+:: --- 8. PRODUCTION PACKAGES ---
+echo.
+echo %CYAN%[*] Installing Production Packages (Spatie, UUID)...%RESET%
+call composer require spatie/laravel-permission spatie/laravel-activitylog
+call php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+call php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="migrations"
 
-call composer require beyondcode/laravel-query-detector --dev
-php artisan vendor:publish --provider=BeyondCode\QueryDetector\QueryDetectorServiceProvider
+call php artisan migrate --force
 
-call composer require jamesmills/eloquent-uuid
+call git add .
+call git commit -m "feat: install spatie packages and migrate"
 
-call composer require spatie/laravel-activitylog
-php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="migrations"
-php artisan migrate
-php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="config"
+:: --- 9. SCAFFOLDING EXAMPLE ---
+echo.
+echo %CYAN%[*] Generating Example Resource (Department)...%RESET%
+call php artisan resource-file:create Department --fields="id,name,image,is_active"
+call php artisan create:resources Department --with-soft-delete --models-per-page=15 --with-migration
+call php artisan migrate --force
 
-call composer require spatie/laravel-permission
-php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="migrations"
-php artisan migrate
-php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="config"
+call git add .
+call git commit -m "feat: generate example department resource"
 
-call composer require laravelcollective/html
+:: --- 10. FRONTEND BUILD ---
+echo.
+echo %CYAN%[*] Building Frontend Assets...%RESET%
+call npm install
+call npm run build
 
-:: call composer require arcanedev/log-viewer --dev
-:: php artisan log-viewer:publish
-:: php artisan log-viewer:check
-:: php artisan log-viewer:clear
+call git add .
+call git commit -m "build: compile assets"
 
-call composer require crestapps/laravel-code-generator --dev
-
-echo Code Generator Install Successfully
-
-php artisan resource-file:create backurl --fields=id,name,description,is_active --translation-for=en,ar
-php artisan create:resources backurl --with-soft-delete --models-per-page=15 --with-migration
-
-php artisan resource-file:create Biography --fields="id,name,name:gender;options:male|female;html-type:select;data-type:enum,name:music_type;html-type:checkbox;options:country|pop|rock|jazz|rap,is_retired"
-php artisan create:resources Biography --with-soft-delete --models-per-page=15 --with-migration
-
-php artisan resource-file:create Animal --fields=id,name,description,is_active --translation-for=en,ar
-php artisan create:resources Animal --with-soft-delete --models-per-page=15 --with-migration
-
-php artisan resource-file:create AssetCategory --fields=id,name,description,is_active
-php artisan create:resources AssetCategory --with-migration
-
-php artisan resource-file:create Department --fields="id,name,image,is_active"
-php artisan create:resources Department --with-soft-delete --models-per-page=15 --with-migration
-
-php artisan resource-file:create quote_items --fields="id,quote_id,qty,unit,desc,price,is_active"
-php artisan create:resources quote_items --with-soft-delete --models-per-page=15 --with-migration
-
-php artisan resource-file:create bids --fields="id,quote_id,supplier_id,amount,message,status,is_active"
-php artisan create:resources bids --with-soft-delete --models-per-page=15 --with-migration
-
-php artisan resource-file:create quotes --fields="id,department_id,desc,status,approved_on,approved_by,assigned,is_active"
-php artisan create:resources quotes --with-soft-delete --models-per-page=15 --with-migration
-
-
-php artisan migrate
-
-php artisan tinker
-
-rem DB::table("backurls")->insert(["id"=>"1", "name"=>"biographies", "description"=>"Biography Menu"]);
-rem DB::table("backurls")->insert(["id"=>"2", "name"=>"animals", "description"=>"animals Menu"]);
-rem DB::table("backurls")->insert(["id"=>"3", "name"=>"asset_categories", "description"=>"asset ctg Menu"]);
-call exit
-
-php artisan serve
-
-rem add namespace at router 'namespace'=>'App\Http\Controllers',
-
+:: --- 11. SUMMARY ---
+cls
+echo %GREEN%=====================================================%RESET%
+echo %GREEN%   INSTALLATION COMPLETE SUCCESSFUL!                 %RESET%
+echo %GREEN%=====================================================%RESET%
+echo.
+echo  %BOLD%Project:%RESET%   %projectname%
+echo  %BOLD%Location:%RESET%  %cd%
+echo  %BOLD%Database:%RESET%  (Check .env)
+echo.
+echo  %YELLOW%Next Steps:%RESET%
+echo  1. cd %projectname%
+echo  2. php artisan serve
+echo.
+echo  %YELLOW%URLs:%RESET%
+echo  - App: http://127.0.0.1:8000
+echo  - Telescope: http://127.0.0.1:8000/telescope
+echo.
 pause

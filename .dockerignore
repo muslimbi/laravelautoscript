@@ -1,0 +1,23 @@
+# Docker Ignore Rules
+.git
+.github
+node_modules
+npm-debug.log*
+__pycache__
+*.pyc
+.env
+.venv
+venv
+dist
+build
+.vscode
+.idea
+*.log
+docs/
+temp/
+tmp/
+LICENSE
+README.md
+CONTRIBUTING.md
+CHANGELOG.md
+SECURITY.md
