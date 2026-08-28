@@ -1,0 +1,22 @@
+# AI Building Rules for CI/CD Integration
+
+This repository is optimized for AI-assisted development. When working on this project, please adhere to the following logic:
+
+## 🧩 Architectural Principles
+- **Modularity**: Every script should be a self-contained unit that can be tested in isolation.
+- **Idempotency**: CI/CD scripts must be safe to run multiple times without unintended side effects.
+- **AI-Enabling**: Include detailed docstrings and comments that explain the *intent* of AI logic, aiding LLMs in future refactoring.
+
+## 🤖 Interaction Guidelines
+- When generating scripts, prioritize `Python` for AI logic and `Batch/Bash` for environment-level automation.
+- Use structured logging (JSON) for all script outputs to facilitate AI-based log analysis.
+- If a build fails, the scripts should provide an "AI-Context" snippet in the log to help the next agentic step.
+
+## 📁 File Organization
+- `/scripts`: Primary executable logic.
+- `/config`: YAML or JSON configurations (no secrets).
+- `/tests`: Pytest or similar suites.
+
+## 🚦 Safety Protocol
+- Never allow an AI script to execute `rm -rf /` or equivalent destructive commands without a manual approval step in the CI pipeline.
+- Ensure all LLM prompts used in scripts are version-controlled.

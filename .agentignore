@@ -1,0 +1,47 @@
+# Agent Ignore Configuration
+# Use this file to define folders and files that AI Agents should NOT scan or index.
+
+# --- Large Directories ---
+node_modules/
+vendor/
+.venv/
+env/
+venv/
+__pycache__/
+
+# --- Build Artifacts ---
+dist/
+build/
+out/
+.next/
+*.egg-info/
+
+# --- Database & Storage ---
+*.db
+*.sqlite
+storage/
+vector_db/
+datasets/
+
+# --- Logs & Temp ---
+logs/
+tmp/
+temp/
+*.log
+
+# --- Sensitive Information ---
+.env
+.env.*
+*.key
+*.pem
+secrets/
+.auth/
+
+# --- External Assets ---
+public/assets/
+*.mp4
+*.zip
+*.tar.gz
+
+# --- Projects folders ---
+laravel-app/*

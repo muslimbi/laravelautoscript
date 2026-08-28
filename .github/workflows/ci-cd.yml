@@ -1,0 +1,157 @@
+name: AI-First Laravel CI/CD
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  validate-scripts:
+    name: Validate Automation Scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: ShellCheck laravel-master-setup.sh
+        run: |
+          sudo apt-get install -y shellcheck
+          shellcheck laravel-master-setup.sh
+
+  test:
+    name: Build & Test
+    needs: validate-scripts
+    runs-on: ubuntu-latest
+    env:
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ":memory:"
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        if: hashFiles('composer.json') != ''
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, ctype, json, tokenizer, xml, curl, gd, zip, pdo, pdo_mysql, bcmath, soap, intl, exif, pcntl, sodium
+          tools: composer:v2
+
+      - name: Setup Node.js
+        if: hashFiles('package.json') != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Composer Dependencies
+        if: hashFiles('composer.json') != ''
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Install NPM Dependencies & Build
+        if: hashFiles('package.json') != ''
+        run: |
+          npm install
+          npm run build
+
+      - name: Copy .env.example to .env
+        if: hashFiles('composer.json') != '' && hashFiles('.env.example') != ''
+        run: cp .env.example .env
+
+      - name: Generate App Key
+        if: hashFiles('composer.json') != ''
+        run: php artisan key:generate
+
+      - name: Run Tests
+        if: hashFiles('composer.json') != ''
+        run: php artisan test
+
+
+  deploy:
+    name: Autonomous Deploy
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Deploy to Production via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: |
+            # Navigate to project directory
+            cd ${{ secrets.REMOTE_PATH || '/var/www/html' }}
+            
+            # Pull latest changes
+            git pull origin ${{ github.ref_name }}
+
+            # Execute standard deployment steps ONLY if it's a Laravel project
+            if [ -f "composer.json" ]; then
+                # Maintenance mode ON
+                php artisan down || true
+                
+                composer install --no-interaction --no-dev --optimize-autoloader
+                php artisan migrate --force
+                
+                # Clear and Rebuild Optimized Cache
+                php artisan config:cache
+                php artisan route:cache
+                php artisan view:cache
+                php artisan optimize
+                
+                # Maintenance mode OFF
+                php artisan up
+            fi
+            
+  release:
+    name: Create GitHub Release
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Create Release Archive
+        run: |
+          # Create a clean distribution directory
+          mkdir -p dist
+          
+          # Copy scripts and documentation
+          cp *.sh *.bat *.md .agentignore .cursorrules .dockerignore .gitignore dist/ 2>/dev/null || true
+          
+          # Include subdirectories if they exist (excluding .git, etc.)
+          [ -d ".github" ] && cp -r .github dist/
+          [ -d "scripts" ] && cp -r scripts dist/
+          
+          # Create ZIP
+          cd dist && zip -r ../ai-build-integration-v${{ github.run_number }}.zip .
+          
+      - name: Generate Release Tag
+        id: tag
+        run: echo "tag_name=v0.1.${{ github.run_number }}" >> $GITHUB_OUTPUT
+
+      - name: GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag_name }}
+          files: ai-build-integration-v${{ github.run_number }}.zip
+          name: AI Build Integration Release ${{ steps.tag.outputs.tag_name }}
+          body: |
+            ## 🚀 New Release
+            Autonomous build of the AI Build CI/CD Integration suite.
+            
+            ### Included Files:
+            - Master Setup Scripts (Bash/Batch)
+            - Agentic Configuration (AGENTS.md, .agentignore)
+            - Optimized CI/CD Workflows
+            
+            *Release generated automatically by Antigravity CI.*
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
