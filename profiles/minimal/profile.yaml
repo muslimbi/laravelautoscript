@@ -1,0 +1,6 @@
+name: minimal
+description: Clean Laravel installation without additional opinionated packages.
+starter_kit: minimal
+admin_panel: none
+features: []
+developer: []

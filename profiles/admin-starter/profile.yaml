@@ -1,0 +1,12 @@
+name: admin-starter
+description: Filament Admin Panel + Spatie Permission + Activity Log + Media Library + Pulse + Pest + Pint.
+starter_kit: minimal
+admin_panel: filament
+features:
+  - permission
+  - activitylog
+  - media
+  - monitoring
+developer:
+  - pest
+  - pint

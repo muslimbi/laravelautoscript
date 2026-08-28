@@ -1,0 +1,24 @@
+{
+    "name": "Department",
+    "fields": [
+        {
+            "name": "id",
+            "type": "bigIncrements"
+        },
+        {
+            "name": "name",
+            "type": "string"
+        },
+        {
+            "name": "image",
+            "type": "string",
+            "nullable": true
+        },
+        {
+            "name": "is_active",
+            "type": "boolean",
+            "default": true
+        }
+    ],
+    "softDelete": true
+}

@@ -1,0 +1,18 @@
+name: saas
+description: Complete SaaS Application platform with React/Inertia, Filament Admin, Spatie RBAC, Activity Log, Media, Sanctum API, Horizon, Reverb, Scout, Billing & Pulse.
+starter_kit: react
+admin_panel: filament
+features:
+  - permission
+  - activitylog
+  - media
+  - api
+  - horizon
+  - reverb
+  - scout
+  - billing
+  - monitoring
+developer:
+  - pest
+  - pint
+  - larastan

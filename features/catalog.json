@@ -1,0 +1,71 @@
+{
+  "version": 2,
+  "starterKits": {
+    "react": { "name": "React (Inertia)", "breezeStack": "react" },
+    "vue": { "name": "Vue (Inertia)", "breezeStack": "vue" },
+    "svelte": { "name": "Svelte", "breezeStack": "svelte" },
+    "livewire": { "name": "Livewire", "breezeStack": "livewire" },
+    "minimal": { "name": "Minimal / Blade", "breezeStack": "blade" }
+  },
+  "authOptions": {
+    "starter-kit": { "name": "Starter Kit Authentication", "notes": "Configured via Breeze/Jetstream" },
+    "sanctum": { "name": "Sanctum API Authentication", "package": "laravel/sanctum", "artisan": "install:api" },
+    "passport": { "name": "Passport OAuth2", "package": "laravel/passport", "artisan": "passport:install" },
+    "session": { "name": "Session Authentication", "notes": "Built-in Laravel session authentication" },
+    "custom": { "name": "Custom Authentication", "notes": "Manual auth setup" },
+    "none": { "name": "No Authentication", "notes": "Unauthenticated API or public site" }
+  },
+  "databases": {
+    "sqlite": { "name": "SQLite", "driver": "sqlite", "defaultPort": "" },
+    "mysql": { "name": "MySQL", "driver": "mysql", "defaultPort": "3306" },
+    "pgsql": { "name": "PostgreSQL", "driver": "pgsql", "defaultPort": "5432" },
+    "mariadb": { "name": "MariaDB", "driver": "mariadb", "defaultPort": "3306" }
+  },
+  "features": {
+    "permission": { "name": "RBAC / Permissions", "package": "spatie/laravel-permission", "publish": "Spatie\\Permission\\PermissionServiceProvider", "notes": "Publishes config and migrations for roles/permissions." },
+    "activitylog": { "name": "Activity / Audit Log", "package": "spatie/laravel-activitylog", "publish": "Spatie\\Activitylog\\ActivitylogServiceProvider", "publishTag": "migrations", "notes": "Publishes activity-log migrations." },
+    "media": { "name": "Media Management", "package": "spatie/laravel-medialibrary", "notes": "Requires a configured filesystem disk." },
+    "api": { "name": "API Platform (Sanctum)", "package": "laravel/sanctum", "artisan": "install:api", "notes": "Adds Sanctum API authentication and routes." },
+    "horizon": { "name": "Queue / Horizon", "package": "laravel/horizon", "artisan": "horizon:install", "notes": "Requires Redis for queue management." },
+    "reverb": { "name": "Realtime / Reverb", "package": "laravel/reverb", "artisan": "reverb:install", "notes": "Configure broadcasting credentials." },
+    "scout": { "name": "Search / Scout", "package": "laravel/scout", "publish": "Laravel\\Scout\\ScoutServiceProvider", "notes": "Select a search driver separately (Algolia, Meilisearch, etc.)." },
+    "notifications": { "name": "Notifications", "notes": "Laravel notification channels built-in." },
+    "storage": { "name": "File Storage", "artisan": "storage:link", "notes": "Configures storage link and disks." },
+    "billing": { "name": "Billing / Cashier", "package": "laravel/cashier", "notes": "Requires payment gateway keys in .env." },
+    "monitoring": { "name": "Monitoring / Pulse", "package": "laravel/pulse", "artisan": "pulse:install", "notes": "Laravel Pulse real-time performance monitor." },
+    "scheduler": { "name": "Scheduler", "notes": "Configure cron: * * * * * php artisan schedule:run" },
+    "reporting": { "name": "Reporting Engine", "notes": "Architecture hook for report generation." },
+    "import-export": { "name": "Import / Export", "package": "maatwebsite/excel", "notes": "Excel/CSV import and export engine." },
+    "localization": { "name": "Localization", "notes": "Multi-language support stubs." },
+    "tenancy": { "name": "Multi-tenancy", "package": "stancl/tenancy", "notes": "Requires tenancy architecture planning." },
+    "flags": { "name": "Feature Flags / Pennant", "package": "laravel/pennant", "publish": "Laravel\\Pennant\\PennantServiceProvider", "notes": "Configure Pennant store in app." },
+    "pest": { "name": "Pest Testing", "package": "pestphp/pest", "dev": true, "notes": "Elegant PHP testing framework." },
+    "pint": { "name": "Laravel Pint", "package": "laravel/pint", "dev": true, "notes": "Opinionated PHP code style fixer." },
+    "larastan": { "name": "Larastan", "package": "larastan/larastan", "dev": true, "notes": "Static analysis tool for Laravel." },
+    "ide-helper": { "name": "IDE Helper", "package": "barryvdh/laravel-ide-helper", "dev": true, "artisan": "ide-helper:generate", "notes": "Generates autocomplete helpers." },
+    "debugbar": { "name": "Debugbar", "package": "barryvdh/laravel-debugbar", "dev": true, "notes": "In-page developer debug bar." },
+    "telescope": { "name": "Telescope", "package": "laravel/telescope", "dev": true, "artisan": "telescope:install", "notes": "Elegant debug assistant for Laravel." },
+    "clockwork": { "name": "Clockwork", "package": "itsgoingd/clockwork", "dev": true, "notes": "Browser extension for debugging." },
+    "query-detector": { "name": "Query Detector", "package": "beyondcode/laravel-query-detector", "dev": true, "notes": "Detects N+1 query issues during development." },
+    "sail": { "name": "Laravel Sail", "package": "laravel/sail", "dev": true, "artisan": "sail:install", "notes": "Docker desktop environment." },
+    "ai-sdk": { "name": "Laravel AI SDK Foundation", "package": "laravel/ai", "notes": "Provider-agnostic AI foundation structure." }
+  },
+  "adminPanels": {
+    "filament": { "name": "Filament", "package": "filament/filament", "artisan": "filament:install --panels", "notes": "Creates default /admin panel with Livewire." },
+    "backpack": { "name": "Backpack", "package": "backpack/crud", "artisan": "backpack:install", "notes": "Admin panel framework for Laravel." },
+    "orchid": { "name": "Orchid", "package": "orchid/platform", "artisan": "orchid:install", "notes": "Rapid application development platform." },
+    "moonshine": { "name": "MoonShine", "package": "moonshine/moonshine", "artisan": "moonshine:install", "notes": "Admin panel based on Tailwind & Blade." },
+    "nova": { "name": "Laravel Nova", "notes": "Commercial/licensed package. Configure manually." },
+    "custom": { "name": "Custom / Manual", "notes": "Manual custom admin dashboard." },
+    "none": { "name": "None", "notes": "No admin panel." }
+  },
+  "profiles": {
+    "minimal": { "name": "Minimal", "description": "Clean Laravel installation without extra packages." },
+    "admin-starter": { "name": "Admin Starter", "description": "Filament + Spatie RBAC + Activity Log + Media + Pulse + Pest + Pint." },
+    "saas": { "name": "SaaS Platform", "description": "Filament + RBAC + Teams + Billing + API + Horizon + Reverb + Scout + Pulse." },
+    "crm": { "name": "CRM Application", "description": "Filament + Spatie RBAC + Activity Log + Media + Search + Notifications + Horizon." },
+    "erp": { "name": "ERP Application", "description": "Filament + RBAC + Audit + Media + Search + Queues + Realtime + Reports + Notifications." },
+    "api-platform": { "name": "API Platform", "description": "Sanctum/Passport API + Validation + Testing + Documentation." },
+    "ai-application": { "name": "AI Application", "description": "Filament + RBAC + Activity Log + AI SDK + Horizon + Scout + Vector support." }
+  }
+}

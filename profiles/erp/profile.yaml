@@ -1,0 +1,17 @@
+name: erp
+description: Enterprise Resource Planning foundation with Filament, Spatie RBAC, Audit logging, Media, Search, Queues, Realtime, Reports & Notifications.
+starter_kit: minimal
+admin_panel: filament
+features:
+  - permission
+  - activitylog
+  - media
+  - scout
+  - horizon
+  - reverb
+  - reporting
+  - notifications
+developer:
+  - pest
+  - pint
+  - larastan

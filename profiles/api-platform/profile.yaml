@@ -1,0 +1,13 @@
+name: api-platform
+description: High-performance API platform architecture with Sanctum API, Spatie RBAC, Activity Log & Horizon queues.
+starter_kit: minimal
+admin_panel: none
+features:
+  - api
+  - permission
+  - activitylog
+  - horizon
+developer:
+  - pest
+  - pint
+  - larastan

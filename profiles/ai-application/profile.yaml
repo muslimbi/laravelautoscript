@@ -1,0 +1,15 @@
+name: ai-application
+description: AI Application platform foundation with Filament, Spatie RBAC, Activity Log, Laravel AI SDK, Horizon queues, Scout search & vector support.
+starter_kit: minimal
+admin_panel: filament
+features:
+  - permission
+  - activitylog
+  - ai-sdk
+  - horizon
+  - scout
+  - monitoring
+developer:
+  - pest
+  - pint
+  - larastan

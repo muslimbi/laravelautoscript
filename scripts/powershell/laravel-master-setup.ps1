@@ -1,7 +1,7 @@
 param([Parameter(ValueFromRemainingArguments = $true)][string[]]$Arguments)
-$root = $PSScriptRoot
+$root = Resolve-Path (Join-Path $PSScriptRoot '../..')
 if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
-    Write-Error "[ERROR] Node.js is required to run LaravelAutoScript v2. Please install Node.js v18+."
+    Write-Error "[ERROR] Node.js is required to run LaravelAutoScript v2."
     exit 1
 }
 & node (Join-Path $root 'scripts/platform-builder.js') @Arguments

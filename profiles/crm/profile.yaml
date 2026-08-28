@@ -1,0 +1,15 @@
+name: crm
+description: CRM starter stack with Filament/Backpack, Spatie RBAC, Activity Log, Media, Search, Notifications & Horizon queues.
+starter_kit: minimal
+admin_panel: filament
+features:
+  - permission
+  - activitylog
+  - media
+  - scout
+  - notifications
+  - horizon
+  - reverb
+developer:
+  - pest
+  - pint
