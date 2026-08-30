@@ -627,6 +627,110 @@ function cmdAi() {
     return true;
 }
 
+function cmdScaffold(moduleType = ARGS[1]) {
+    out('\n============================================================');
+    out('  Domain & Feature Module Scaffolder');
+    out('============================================================');
+
+    const selectedModule = moduleType || promptChoiceSync('Select Domain Module to Scaffold:', [
+        ['user-permissions', 'User & Roles / Permissions Module (Spatie RBAC + User Scaffolding)'],
+        ['products-categories', 'Products & Categories Module (Catalog, SKUs, Pricing, Stock)'],
+        ['employees', 'Employees & Departments Module (HR Directory, Positions, Salaries)'],
+        ['orders', 'Orders & Order Items Module (E-commerce Order Management)'],
+        ['customers', 'Customer Management Module (CRM Contacts & Accounts)'],
+        ['custom', 'Custom Model / CRUD Resource Generator']
+    ]);
+
+    const targetDir = getProjectDir();
+    if (!isLaravelApp(targetDir)) {
+        error(`No valid Laravel application found at ${targetDir}`);
+        return false;
+    }
+
+    if (selectedModule === 'custom') {
+        return cmdCrud();
+    }
+
+    info(`Scaffolding domain module '${selectedModule}'...`);
+
+    if (selectedModule === 'user-permissions') {
+        cmdInstallFeature('permission', targetDir);
+        runCmd('php', ['artisan', 'make:model', 'Role', '-m'], targetDir);
+        runCmd('php', ['artisan', 'make:model', 'Permission', '-m'], targetDir);
+        runCmd('php', ['artisan', 'make:controller', 'UserController', '--resource', '--requests'], targetDir);
+        runCmd('php', ['artisan', 'make:controller', 'RoleController', '--resource', '--requests'], targetDir);
+        if (isPackageInstalled('filament/filament', targetDir)) {
+            runCmd('php', ['artisan', 'make:filament-resource', 'User', '--generate'], targetDir);
+        }
+        success('User & Roles / Permissions domain module scaffolded.');
+        return true;
+    }
+
+    if (selectedModule === 'products-categories') {
+        info('Scaffolding Category model and stack...');
+        runCmd('php', ['artisan', 'make:model', 'Category', '-mf'], targetDir);
+        runCmd('php', ['artisan', 'make:controller', 'CategoryController', '--resource', '--requests'], targetDir);
+
+        info('Scaffolding Product model and stack...');
+        runCmd('php', ['artisan', 'make:model', 'Product', '-mf'], targetDir);
+        runCmd('php', ['artisan', 'make:controller', 'ProductController', '--resource', '--requests'], targetDir);
+
+        if (isPackageInstalled('filament/filament', targetDir)) {
+            runCmd('php', ['artisan', 'make:filament-resource', 'Category', '--generate'], targetDir);
+            runCmd('php', ['artisan', 'make:filament-resource', 'Product', '--generate'], targetDir);
+        }
+        success('Products & Categories domain module scaffolded.');
+        return true;
+    }
+
+    if (selectedModule === 'employees') {
+        info('Scaffolding Department model and stack...');
+        runCmd('php', ['artisan', 'make:model', 'Department', '-mf'], targetDir);
+        runCmd('php', ['artisan', 'make:controller', 'DepartmentController', '--resource', '--requests'], targetDir);
+
+        info('Scaffolding Employee model and stack...');
+        runCmd('php', ['artisan', 'make:model', 'Employee', '-mf'], targetDir);
+        runCmd('php', ['artisan', 'make:controller', 'EmployeeController', '--resource', '--requests'], targetDir);
+
+        if (isPackageInstalled('filament/filament', targetDir)) {
+            runCmd('php', ['artisan', 'make:filament-resource', 'Department', '--generate'], targetDir);
+            runCmd('php', ['artisan', 'make:filament-resource', 'Employee', '--generate'], targetDir);
+        }
+        success('Employees & Departments domain module scaffolded.');
+        return true;
+    }
+
+    if (selectedModule === 'orders') {
+        info('Scaffolding Order model and stack...');
+        runCmd('php', ['artisan', 'make:model', 'Order', '-mf'], targetDir);
+        runCmd('php', ['artisan', 'make:controller', 'OrderController', '--resource', '--requests'], targetDir);
+
+        info('Scaffolding OrderItem model and stack...');
+        runCmd('php', ['artisan', 'make:model', 'OrderItem', '-mf'], targetDir);
+
+        if (isPackageInstalled('filament/filament', targetDir)) {
+            runCmd('php', ['artisan', 'make:filament-resource', 'Order', '--generate'], targetDir);
+        }
+        success('Orders & Order Items domain module scaffolded.');
+        return true;
+    }
+
+    if (selectedModule === 'customers') {
+        info('Scaffolding Customer model and stack...');
+        runCmd('php', ['artisan', 'make:model', 'Customer', '-mf'], targetDir);
+        runCmd('php', ['artisan', 'make:controller', 'CustomerController', '--resource', '--requests'], targetDir);
+
+        if (isPackageInstalled('filament/filament', targetDir)) {
+            runCmd('php', ['artisan', 'make:filament-resource', 'Customer', '--generate'], targetDir);
+        }
+        success('Customer Management domain module scaffolded.');
+        return true;
+    }
+
+    error(`Unknown domain module '${selectedModule}'`);
+    return false;
+}
+
 function cmdCrud() {
     out('\n============================================================');
     out('  13. Generic CRUD Generator');
@@ -892,6 +996,12 @@ function cmdTestSuite() {
         if (!fs.existsSync(saasPath)) throw new Error('SaaS profile missing');
     });
 
+    test('Domain Modules Catalog', () => {
+        if (!CATALOG.domainModules || !CATALOG.domainModules['user-permissions']) {
+            throw new Error('Domain modules missing from catalog');
+        }
+    });
+
     out(`\nSelf-Test Suite Complete: ${passed} passed, ${failed} failed.`);
     return failed === 0;
 }
@@ -911,20 +1021,21 @@ function displayMasterWizard() {
     out(' [7]  API Platform');
     out(' [8]  Application Features');
     out(' [9]  AI Features');
-    out(' [10] Developer Tools');
-    out(' [11] Build & Optimize');
-    out(' [12] Test & Quality');
-    out(' [13] Local Deployment');
-    out(' [14] Production Deployment');
-    out(' [15] Docker');
-    out(' [16] Git / GitHub');
-    out(' [17] System Check');
-    out(' [18] Project Information');
-    out(' [19] Advanced Configuration');
+    out(' [10] Domain & Module Scaffolding (User & Permissions, Products & Categories, Employees)');
+    out(' [11] Developer Tools');
+    out(' [12] Build & Optimize');
+    out(' [13] Test & Quality');
+    out(' [14] Local Deployment');
+    out(' [15] Production Deployment');
+    out(' [16] Docker');
+    out(' [17] Git / GitHub');
+    out(' [18] System Check');
+    out(' [19] Project Information');
+    out(' [20] Advanced Configuration');
     out(' [0]  Exit');
     out('');
 
-    const choice = promptChoiceSync('Select option [0-19]:', [
+    const choice = promptChoiceSync('Select option [0-20]:', [
         ['1', 'Create New Laravel Application'],
         ['2', 'Configure Existing Laravel Application'],
         ['3', 'Application Profiles'],
@@ -934,16 +1045,17 @@ function displayMasterWizard() {
         ['7', 'API Platform'],
         ['8', 'Application Features'],
         ['9', 'AI Features'],
-        ['10', 'Developer Tools'],
-        ['11', 'Build & Optimize'],
-        ['12', 'Test & Quality'],
-        ['13', 'Local Deployment'],
-        ['14', 'Production Deployment'],
-        ['15', 'Docker'],
-        ['16', 'Git / GitHub'],
-        ['17', 'System Check'],
-        ['18', 'Project Information'],
-        ['19', 'Advanced Configuration'],
+        ['10', 'Domain & Module Scaffolding (User & Permissions, Products & Categories, Employees)'],
+        ['11', 'Developer Tools'],
+        ['12', 'Build & Optimize'],
+        ['13', 'Test & Quality'],
+        ['14', 'Local Deployment'],
+        ['15', 'Production Deployment'],
+        ['16', 'Docker'],
+        ['17', 'Git / GitHub'],
+        ['18', 'System Check'],
+        ['19', 'Project Information'],
+        ['20', 'Advanced Configuration'],
         ['0', 'Exit']
     ]);
 
@@ -957,16 +1069,17 @@ function displayMasterWizard() {
         case '7': cmdInstallFeature('api'); break;
         case '8': cmdInstallFeature(); break;
         case '9': cmdAi(); break;
-        case '10': cmdInstallFeature('pest'); break;
-        case '11': cmdBuild(); break;
-        case '12': cmdQuality(); break;
-        case '13': cmdDeploy(); break;
+        case '10': cmdScaffold(); break;
+        case '11': cmdInstallFeature('pest'); break;
+        case '12': cmdBuild(); break;
+        case '13': cmdQuality(); break;
         case '14': cmdDeploy(); break;
-        case '15': info('Docker / Sail Integration'); break;
-        case '16': runCmd('git', ['status'], getProjectDir()); break;
-        case '17': cmdSystem(); break;
-        case '18': cmdInfo(); break;
-        case '19': info('Advanced config stored in .laravelautoscript.yml.'); break;
+        case '15': cmdDeploy(); break;
+        case '16': info('Docker / Sail Integration'); break;
+        case '17': runCmd('git', ['status'], getProjectDir()); break;
+        case '18': cmdSystem(); break;
+        case '19': cmdInfo(); break;
+        case '20': info('Advanced config stored in .laravelautoscript.yml.'); break;
         case '0': process.exit(0); break;
     }
 }
@@ -981,6 +1094,8 @@ switch (subcommand) {
     case 'admin': cmdAdmin(ARGS[1]); break;
     case 'feature': cmdInstallFeature(ARGS[1]); break;
     case 'ai': cmdAi(); break;
+    case 'scaffold': cmdScaffold(ARGS[1]); break;
+    case 'domain': cmdScaffold(ARGS[1]); break;
     case 'developer': cmdInstallFeature(ARGS[1]); break;
     case 'build': cmdBuild(); break;
     case 'test': cmdQuality(); break;
