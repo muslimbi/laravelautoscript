@@ -193,54 +193,74 @@ function saveProjectConfig(dir = getProjectDir(), patch = {}) {
     success(`Updated ${configFile}`);
 }
 
-function promptChoiceSync(questionText, options) {
-    out(`\n${questionText}`);
-    options.forEach(([key, label]) => out(`  [${key}] ${label}`));
-
-    if (IS_NON_INTERACTIVE) {
-        const defaultOption = options[0] ? options[0][0] : '1';
-        info(`Non-interactive mode: selecting default [${defaultOption}]`);
-        return defaultOption;
+function readSyncInput(promptMsg, defaultVal = '') {
+    if (promptMsg) {
+        process.stdout.write(promptMsg);
     }
-
-    const fd = fs.openSync(process.platform === 'win32' ? '\\\\.\\pipe\\conin$' : '/dev/tty', 'r');
-    let input = '';
-    const buf = Buffer.alloc(1024);
-
-    while (!input.includes('\n') && !input.includes('\r')) {
-        const bytesRead = fs.readSync(fd, buf, 0, buf.length, null);
-        if (bytesRead > 0) {
-            input += buf.toString('utf8', 0, bytesRead);
-        }
-    }
-    fs.closeSync(fd);
-
-    const selected = input.trim();
-    const valid = options.some(opt => opt[0] === selected);
-    return valid ? selected : options[0][0];
-}
-
-function promptInputSync(questionText, defaultVal = '') {
-    out(`\n${questionText}${defaultVal ? ` [${defaultVal}]` : ''}: `);
     if (IS_NON_INTERACTIVE) {
-        info(`Non-interactive mode: using default '${defaultVal}'`);
+        if (defaultVal) info(`Non-interactive mode: using default '${defaultVal}'`);
         return defaultVal;
     }
 
-    const fd = fs.openSync(process.platform === 'win32' ? '\\\\.\\pipe\\conin$' : '/dev/tty', 'r');
-    let input = '';
-    const buf = Buffer.alloc(1024);
+    let fd = null;
+    let shouldClose = false;
 
-    while (!input.includes('\n') && !input.includes('\r')) {
-        const bytesRead = fs.readSync(fd, buf, 0, buf.length, null);
-        if (bytesRead > 0) {
+    try {
+        if (process.platform === 'win32') {
+            try {
+                fd = fs.openSync('CONIN$', 'r');
+                shouldClose = true;
+            } catch {
+                try {
+                    fd = fs.openSync('\\\\.\\pipe\\conin$', 'r');
+                    shouldClose = true;
+                } catch {
+                    fd = process.stdin.fd;
+                }
+            }
+        } else {
+            try {
+                fd = fs.openSync('/dev/tty', 'r');
+                shouldClose = true;
+            } catch {
+                fd = process.stdin.fd;
+            }
+        }
+
+        let input = '';
+        const buf = Buffer.alloc(1024);
+
+        while (!input.includes('\n') && !input.includes('\r')) {
+            const bytesRead = fs.readSync(fd, buf, 0, buf.length, null);
+            if (bytesRead <= 0) break;
             input += buf.toString('utf8', 0, bytesRead);
         }
-    }
-    fs.closeSync(fd);
 
-    const res = input.trim();
-    return res || defaultVal;
+        const res = input.trim();
+        return res || defaultVal;
+    } catch {
+        info(`Non-interactive / pipe stream detected. Defaulting to '${defaultVal}'`);
+        return defaultVal;
+    } finally {
+        if (shouldClose && fd !== null) {
+            try { fs.closeSync(fd); } catch { }
+        }
+    }
+}
+
+function promptChoiceSync(questionText, options) {
+    out(`\n${questionText}`);
+    options.forEach(([key, label]) => out(`  [${key}] ${label}`));
+    const defaultOption = options[0] ? options[0][0] : '1';
+
+    const input = readSyncInput(`Select option [${defaultOption}]: `, defaultOption);
+    const valid = options.some(opt => opt[0] === input);
+    return valid ? input : defaultOption;
+}
+
+function promptInputSync(questionText, defaultVal = '') {
+    const promptMsg = `\n${questionText}${defaultVal ? ` [${defaultVal}]` : ''}: `;
+    return readSyncInput(promptMsg, defaultVal);
 }
 
 // ============================================================================
