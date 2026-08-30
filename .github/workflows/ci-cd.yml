@@ -69,7 +69,7 @@ jobs:
     name: Autonomous Deploy
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && secrets.SSH_HOST != ''
     steps:
       - uses: actions/checkout@v4
       
@@ -154,4 +154,4 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+
